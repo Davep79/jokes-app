@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Joke Generator</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Random Joke Generator</h1>
+    <div id="joke" class="joke-box">Click the button to hear a joke!</div>
+    <div class="button-group">
+      <button onclick="fetchJoke()">Tell Me a Joke</button>
+      <button onclick="copyJoke()">Copy Joke</button>
+    </div>
+  </div>
+
+  <script>
+    async function fetchJoke() {
+      const response = await fetch('/get_joke', { method: 'POST' });
+      const data = await response.json();
+      document.getElementById("joke").innerText = data.joke;
+    }
+
+    function copyJoke() {
+      const text = document.getElementById("joke").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Joke copied to clipboard!");
+      });
+    }
+  </script>
+</body>
+</html>
