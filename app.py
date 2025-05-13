@@ -9,10 +9,20 @@ def home():
 
 @app.route('/get_joke', methods=["POST"])
 def get_joke():
-    # Request a single-part programming joke from JokeAPI
-    response = requests.get("https://v2.jokeapi.dev/joke/Programming?type=single")
+    # Fetch from 'Misc' category which includes husband-wife humor, allow both types
+    url = "https://v2.jokeapi.dev/joke/Misc?type=any&safe-mode"
+    response = requests.get(url)
     data = response.json()
-    joke = data.get("joke", "Oops! No joke found.")
+
+    if data.get("type") == "single":
+        joke = data.get("joke", "Oops! No joke found.")
+    elif data.get("type") == "twopart":
+        setup = data.get("setup", "")
+        delivery = data.get("delivery", "")
+        joke = f"{setup}\n\n{delivery}"
+    else:
+        joke = "Oops! Couldn't fetch a joke."
+
     return jsonify(joke=joke)
 
 if __name__ == '__main__':
